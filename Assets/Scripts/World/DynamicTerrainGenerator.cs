@@ -57,33 +57,28 @@ public class TerrainGenerator : MonoBehaviour
     void GenerateTerrainAroundPlayer()
     {
         Vector3 playerPos = player.position;
+        float averageScale = (minSphereScale + maxSphereScale) / 2f;
+        float spacing = averageScale * 0.9f;
 
         for (int x = -chunkRadius; x <= chunkRadius; x++)
         {
             for (int z = -chunkRadius; z <= chunkRadius; z++)
             {
-                int worldX = Mathf.FloorToInt(playerPos.x) + x;
-                int worldZ = Mathf.FloorToInt(playerPos.z) + z;
+                int worldX = Mathf.FloorToInt(playerPos.x / spacing) + x;
+                int worldZ = Mathf.FloorToInt(playerPos.z / spacing) + z;
 
                 float yNoise = Mathf.PerlinNoise(worldX * scale, worldZ * scale) * heightMultiplier;
                 int yMax = Mathf.Max(1, Mathf.FloorToInt(yNoise));
 
                 for (int y = 0; y <= yMax; y++)
                 {
-                    float scaleNoise = Mathf.PerlinNoise((worldX + 100) * 0.2f, (worldZ + 100) * 0.2f);
-                    float scale = Mathf.Lerp(minSphereScale, maxSphereScale, scaleNoise);
-
-                    // This makes sure that spacing shrinks with the sphere, keeping them tightly packed.
-                    float spacing = (minSphereScale + maxSphereScale) / 2f * 0.95f;
                     Vector3 pos = new Vector3(worldX * spacing, y * spacing, worldZ * spacing);
-
-                    
                     Vector3 key = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z));
 
                     if (generatedPositions.Contains(key)) continue;
 
                     GameObject block = terrainPool.Get(pos, Quaternion.identity, transform);
-                    block.transform.localScale = Vector3.one * scale;
+                    block.transform.localScale = Vector3.one * spacing;
 
                     Renderer renderer = block.GetComponent<Renderer>();
                     SphereBlock blockData = block.GetComponent<SphereBlock>();
@@ -161,7 +156,8 @@ public class TerrainGenerator : MonoBehaviour
                 if (pair.Value.name.Contains("Tree"))      treePool?.Return(pair.Value);
                 else if (pair.Value.name.Contains("Flower")) flowerPool?.Return(pair.Value);
                 else if (pair.Value.name.Contains("Creature")) creaturePool?.Return(pair.Value);
-                else Destroy(pair.Value); // fallback
+                else Destroy(pair.Value);
+
                 toRemove.Add(pair.Key);
             }
         }

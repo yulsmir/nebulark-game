@@ -163,9 +163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040ca9809255d224aa7984f4710d8f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.05
+  scale: 0.1
   heightMultiplier: 12
-  chunkRadius: 15
+  chunkRadius: 20
   spherePrefab: {fileID: 6142941686261234867, guid: 12bf651008b589d428bc07086d204345, type: 3}
   grassMaterial: {fileID: 2100000, guid: bb0296752a0d0b745b3baa31a05c1c98, type: 2}
   dirtMaterial: {fileID: 2100000, guid: 5e30a487048262a40b1071c94f2fcbea, type: 2}
@@ -173,17 +173,17 @@ MonoBehaviour:
   waterMaterial: {fileID: 2100000, guid: 74e437afe2ad595479c340e354a185d0, type: 2}
   sandMaterial: {fileID: 2100000, guid: 99c47975038d16a4abffb687e06fe418, type: 2}
   snowMaterial: {fileID: 2100000, guid: 35f4782e95356bb419e75050d2d88160, type: 2}
-  minSphereScale: 1
+  minSphereScale: 0.8
   maxSphereScale: 1.2
   player: {fileID: 8339639574206188243}
-  unloadRadius: 17
+  unloadRadius: 21
   treePrefab: {fileID: 6697389126570787417, guid: 3e51f31e029b75f4987143a445ab44bc, type: 3}
   flowerPrefab: {fileID: 6697389126570787417, guid: 6d0f5fee66b15da47a0b535ac62071d6, type: 3}
   creaturePrefab: {fileID: 0}
   terrainPool: {fileID: 1888862292}
   treePool: {fileID: 1720855672}
   flowerPool: {fileID: 1252340520}
-  creaturePool: {fileID: 1925240187}
+  creaturePool: {fileID: 0}
 --- !u!4 &91057551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 219762872935830658, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
@@ -363,17 +363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d729a6a9f7f71bc4e9ed9f268a76b82c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1925240187 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3602868287951452453, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
-  m_PrefabInstance: {fileID: 380658339111621227}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d729a6a9f7f71bc4e9ed9f268a76b82c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &380658339111621227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -426,7 +415,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3602868287951452453, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
