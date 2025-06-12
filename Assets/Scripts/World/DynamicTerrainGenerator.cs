@@ -73,7 +73,11 @@ public class TerrainGenerator : MonoBehaviour
                     float scaleNoise = Mathf.PerlinNoise((worldX + 100) * 0.2f, (worldZ + 100) * 0.2f);
                     float scale = Mathf.Lerp(minSphereScale, maxSphereScale, scaleNoise);
 
-                    Vector3 pos = new Vector3(worldX * scale, y * scale, worldZ * scale);
+                    // This makes sure that spacing shrinks with the sphere, keeping them tightly packed.
+                    float spacing = (minSphereScale + maxSphereScale) / 2f * 0.95f;
+                    Vector3 pos = new Vector3(worldX * spacing, y * spacing, worldZ * spacing);
+
+                    
                     Vector3 key = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z));
 
                     if (generatedPositions.Contains(key)) continue;
