@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scale: 0.1
   heightMultiplier: 12
-  chunkRadius: 20
+  chunkRadius: 15
   spherePrefab: {fileID: 6142941686261234867, guid: 12bf651008b589d428bc07086d204345, type: 3}
   grassMaterial: {fileID: 2100000, guid: bb0296752a0d0b745b3baa31a05c1c98, type: 2}
   dirtMaterial: {fileID: 2100000, guid: 5e30a487048262a40b1071c94f2fcbea, type: 2}
@@ -173,10 +173,10 @@ MonoBehaviour:
   waterMaterial: {fileID: 2100000, guid: 74e437afe2ad595479c340e354a185d0, type: 2}
   sandMaterial: {fileID: 2100000, guid: 99c47975038d16a4abffb687e06fe418, type: 2}
   snowMaterial: {fileID: 2100000, guid: 35f4782e95356bb419e75050d2d88160, type: 2}
-  minSphereScale: 0.8
-  maxSphereScale: 1.2
+  minSphereScale: 1
+  maxSphereScale: 1
   player: {fileID: 8339639574206188243}
-  unloadRadius: 21
+  unloadRadius: 16
   treePrefab: {fileID: 6697389126570787417, guid: 3e51f31e029b75f4987143a445ab44bc, type: 3}
   flowerPrefab: {fileID: 6697389126570787417, guid: 6d0f5fee66b15da47a0b535ac62071d6, type: 3}
   creaturePrefab: {fileID: 0}
