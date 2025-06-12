@@ -35,13 +35,19 @@ public class TerrainGenerator : MonoBehaviour
     public GameObject flowerPrefab;
     public GameObject creaturePrefab;
 
+    [Header("Pooling")]
+    public ObjectPooler terrainPool;
+    public ObjectPooler treePool;
+    public ObjectPooler flowerPool;
+    public ObjectPooler creaturePool;
+
     private Dictionary<Vector3, GameObject> spawnedBlocks = new();
     private Dictionary<Vector3, GameObject> spawnedFlora = new();
     private HashSet<Vector3> generatedPositions = new();
 
     void Update()
     {
-        if (player == null || spherePrefab == null) return;
+        if (player == null || terrainPool == null) return;
 
         GenerateTerrainAroundPlayer();
         UnloadDistantTerrain();
@@ -72,12 +78,12 @@ public class TerrainGenerator : MonoBehaviour
 
                     if (generatedPositions.Contains(key)) continue;
 
-                    GameObject block = Instantiate(spherePrefab, pos, Quaternion.identity, transform);
+                    GameObject block = terrainPool.Get(pos, Quaternion.identity, transform);
                     block.transform.localScale = Vector3.one * scale;
 
                     Renderer renderer = block.GetComponent<Renderer>();
                     SphereBlock blockData = block.GetComponent<SphereBlock>();
-                    if (blockData != null) blockData.gridPosition = key;
+                    if (blockData != null) blockData.gridPosition = Vector3Int.RoundToInt(key);
 
                     if (y <= 2)       { if (blockData != null) blockData.type = SphereType.Water;  renderer.material = waterMaterial; }
                     else if (y < 4)   { if (blockData != null) blockData.type = SphereType.Sand;   renderer.material = sandMaterial; }
@@ -101,17 +107,16 @@ public class TerrainGenerator : MonoBehaviour
                     {
                         float chance = Random.value;
 
-                        if (blockData.type == SphereType.Grass)
+                        if (blockData.type == SphereType.Grass && !spawnedFlora.ContainsKey(key))
                         {
-                            if (chance < 0.05f && treePrefab && !spawnedFlora.ContainsKey(key))
-                                spawnedFlora[key] = Instantiate(treePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
-                            else if (chance < 0.10f && flowerPrefab && !spawnedFlora.ContainsKey(key))
-                                spawnedFlora[key] = Instantiate(flowerPrefab, pos + Vector3.up * 0.3f, Quaternion.identity, transform);
+                            if (chance < 0.05f && treePool)
+                                spawnedFlora[key] = treePool.Get(pos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                            else if (chance < 0.10f && flowerPool)
+                                spawnedFlora[key] = flowerPool.Get(pos + Vector3.up * 0.3f, Quaternion.identity, transform);
                         }
-                        else if (blockData.type == SphereType.Sand)
+                        else if (blockData.type == SphereType.Sand && chance < 0.03f && creaturePool && !spawnedFlora.ContainsKey(key))
                         {
-                            if (chance < 0.03f && creaturePrefab && !spawnedFlora.ContainsKey(key))
-                                spawnedFlora[key] = Instantiate(creaturePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                            spawnedFlora[key] = creaturePool.Get(pos + Vector3.up * 0.5f, Quaternion.identity, transform);
                         }
                     }
                 }
@@ -128,7 +133,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             if (Vector3.Distance(pair.Key, playerPos) > unloadRadius)
             {
-                Destroy(pair.Value);
+                terrainPool.Return(pair.Value);
                 toRemove.Add(pair.Key);
             }
         }
@@ -149,7 +154,10 @@ public class TerrainGenerator : MonoBehaviour
         {
             if (Vector3.Distance(pair.Key, playerPos) > unloadRadius)
             {
-                Destroy(pair.Value);
+                if (pair.Value.name.Contains("Tree"))      treePool?.Return(pair.Value);
+                else if (pair.Value.name.Contains("Flower")) flowerPool?.Return(pair.Value);
+                else if (pair.Value.name.Contains("Creature")) creaturePool?.Return(pair.Value);
+                else Destroy(pair.Value); // fallback
                 toRemove.Add(pair.Key);
             }
         }
