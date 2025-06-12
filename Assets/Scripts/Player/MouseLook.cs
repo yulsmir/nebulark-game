@@ -2,26 +2,29 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody;      // Assign Player GameObject here
+    public Transform playerBody;
     public float mouseSensitivity = 100f;
-    public float clampAngle = 80f;
+    public float maxVerticalAngle = 80f;
 
-    float xRotation = 0f;
+    private float verticalRotation = 0f;
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;  // Hide and lock cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    void Update()
+    void LateUpdate()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -clampAngle, clampAngle);
+        // Vertical rotation (camera)
+        verticalRotation -= mouseY;
+        verticalRotation = Mathf.Clamp(verticalRotation, -maxVerticalAngle, maxVerticalAngle);
+        transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        // Horizontal rotation (player body)
         playerBody.Rotate(Vector3.up * mouseX);
     }
 }

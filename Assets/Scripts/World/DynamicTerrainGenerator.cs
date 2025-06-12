@@ -30,9 +30,15 @@ public class TerrainGenerator : MonoBehaviour
     [Header("Unloading Settings")]
     public int unloadRadius = 12; // must be > chunkRadius
 
-    private Dictionary<Vector3Int, GameObject> spawnedBlocks = new Dictionary<Vector3Int, GameObject>();
+    [Header("Procedural Content")]
+    public GameObject treePrefab;
+    public GameObject flowerPrefab;
+    public GameObject creaturePrefab;
 
+    private Dictionary<Vector3Int, GameObject> spawnedBlocks = new Dictionary<Vector3Int, GameObject>();
     private HashSet<Vector3Int> generatedPositions = new HashSet<Vector3Int>();
+    private HashSet<Vector3Int> floraPositions = new HashSet<Vector3Int>();
+
 
     void Update()
     {
@@ -107,14 +113,43 @@ public class TerrainGenerator : MonoBehaviour
                     block.isStatic = true;
                     block.GetComponent<MeshRenderer>().allowOcclusionWhenDynamic = false;
                     block.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                    
+
                     generatedPositions.Add(pos);
                     spawnedBlocks[pos] = block;
+
+                    // Procedural Flora/Creature Spawning (on surface only)
+                    if (y == yMax)
+                    {
+                        float spawnChance = Random.value;
+
+                        if (blockData.type == SphereType.Grass && !floraPositions.Contains(pos))
+                        {
+                            if (spawnChance < 0.05f && treePrefab != null)
+                            {
+                                Instantiate(treePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                                floraPositions.Add(pos);
+                            }
+                            else if (spawnChance < 0.10f && flowerPrefab != null)
+                            {
+                                Instantiate(flowerPrefab, pos + Vector3.up * 0.3f, Quaternion.identity, transform);
+                                floraPositions.Add(pos);
+                            }
+                        }
+                        else if (blockData.type == SphereType.Sand && !floraPositions.Contains(pos))
+                        {
+                            if (spawnChance < 0.03f && creaturePrefab != null)
+                            {
+                                Instantiate(creaturePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                                floraPositions.Add(pos);
+                            }
+                        }
+                    }
 
                 }
             }
         }
     }
+
     void UnloadDistantTerrain()
     {
         Vector3 playerPos = player.position;
@@ -125,7 +160,7 @@ public class TerrainGenerator : MonoBehaviour
             float distance = Vector3.Distance(pair.Key, playerPos);
             if (distance > unloadRadius)
             {
-                Destroy(pair.Value); // or pair.Value.SetActive(false);
+                Destroy(pair.Value);
                 toRemove.Add(pair.Key);
             }
         }
@@ -136,5 +171,4 @@ public class TerrainGenerator : MonoBehaviour
             generatedPositions.Remove(pos);
         }
     }
-
 }

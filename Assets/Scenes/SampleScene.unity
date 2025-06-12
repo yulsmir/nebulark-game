@@ -177,6 +177,9 @@ MonoBehaviour:
   maxSphereScale: 1.2
   player: {fileID: 8339639574206188243}
   unloadRadius: 17
+  treePrefab: {fileID: 6697389126570787417, guid: 3e51f31e029b75f4987143a445ab44bc, type: 3}
+  flowerPrefab: {fileID: 0}
+  creaturePrefab: {fileID: 0}
 --- !u!4 &91057551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 219762872935830658, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
@@ -322,7 +325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBody: {fileID: 91057551}
   mouseSensitivity: 100
-  clampAngle: 80
+  maxVerticalAngle: 80
 --- !u!1001 &8339639574206188242
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -378,6 +381,10 @@ PrefabInstance:
     - target: {fileID: 5542535368196561856, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
       propertyPath: jumpHeight
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667256719020957786, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
+      propertyPath: m_Radius
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
