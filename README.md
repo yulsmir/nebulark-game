@@ -99,10 +99,43 @@
 
 
 ---
+🎨 Nebulark Base Color Palette
+🌱 Grass / Leaves
 
-## ✨ Vision Statement
+    #A8C686 – muted light green
 
-**"Nebulark invites players to survive and explore a dreamlike universe, where the world is shaped by spheres and the future is shaped by you."**
+    #6D925C – deep, natural green
 
+🪵 Dirt / Trunks
 
+    #B58C6B – light brown
 
+    #8A5E3C – rich bark tone
+
+⛰️ Stone
+
+    #9C9C9C – warm medium gray
+
+    #6A6A6A – deep slate
+
+🌊 Water / Sky
+
+    #9DD5E3 – bright sky blue
+
+    #70ADC0 – ocean teal
+
+    #DCF1FF – soft horizon highlight
+
+🌸 Sand / Accent
+
+    #F9C891 – soft orange
+
+    #FFE8B5 – pastel cream
+
+    #F2B7D5 – warm pink (for petals or butterflies)
+
+❄️ Snow / Ice
+
+    #E9F6FA – light icy blue
+
+    #C4DDE6 – cold shadow tone
