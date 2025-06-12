@@ -1,7 +1,11 @@
 using UnityEngine;
-using World;
 
-public class SphereBlock : MonoBehaviour {
-    public SphereType type;
-    public Vector3Int gridPosition;
+namespace World
+{
+    public class SphereBlock : MonoBehaviour {
+        public SphereType type;
+        public Vector3 gridPosition;
+
+    }
 }
+

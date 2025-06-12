@@ -1,6 +1,6 @@
-
 using System.Collections.Generic;
 using UnityEngine;
+using World;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -35,9 +35,9 @@ public class TerrainGenerator : MonoBehaviour
     public GameObject flowerPrefab;
     public GameObject creaturePrefab;
 
-    private Dictionary<Vector3Int, GameObject> spawnedBlocks = new Dictionary<Vector3Int, GameObject>();
-    private Dictionary<Vector3Int, GameObject> spawnedFlora = new Dictionary<Vector3Int, GameObject>();
-    private HashSet<Vector3> generatedPositions = new HashSet<Vector3>();
+    private Dictionary<Vector3, GameObject> spawnedBlocks = new();
+    private Dictionary<Vector3, GameObject> spawnedFlora = new();
+    private HashSet<Vector3> generatedPositions = new();
 
     void Update()
     {
@@ -50,17 +50,15 @@ public class TerrainGenerator : MonoBehaviour
 
     void GenerateTerrainAroundPlayer()
     {
-        Vector3Int playerPos = Vector3Int.RoundToInt(player.position);
+        Vector3 playerPos = player.position;
 
         for (int x = -chunkRadius; x <= chunkRadius; x++)
         {
             for (int z = -chunkRadius; z <= chunkRadius; z++)
             {
-                int worldX = playerPos.x + x;
-                int worldZ = playerPos.z + z;
+                int worldX = Mathf.FloorToInt(playerPos.x) + x;
+                int worldZ = Mathf.FloorToInt(playerPos.z) + z;
 
-                //Uses noise to determine a smooth scale per block.
-                //Multiplies position by scale to pack spheres tightly with minimal gaps. 
                 float yNoise = Mathf.PerlinNoise(worldX * scale, worldZ * scale) * heightMultiplier;
                 int yMax = Mathf.Max(1, Mathf.FloorToInt(yNoise));
 
@@ -70,48 +68,23 @@ public class TerrainGenerator : MonoBehaviour
                     float scale = Mathf.Lerp(minSphereScale, maxSphereScale, scaleNoise);
 
                     Vector3 pos = new Vector3(worldX * scale, y * scale, worldZ * scale);
+                    Vector3 key = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z));
 
-                    if (generatedPositions.Contains(pos)) continue;
+                    if (generatedPositions.Contains(key)) continue;
 
                     GameObject block = Instantiate(spherePrefab, pos, Quaternion.identity, transform);
-
-                    float randomScale = Random.Range(minSphereScale, maxSphereScale);
-                    block.transform.localScale = Vector3.one * randomScale;
+                    block.transform.localScale = Vector3.one * scale;
 
                     Renderer renderer = block.GetComponent<Renderer>();
                     SphereBlock blockData = block.GetComponent<SphereBlock>();
-                    if (blockData != null) blockData.gridPosition = pos;
+                    if (blockData != null) blockData.gridPosition = key;
 
-                    if (y <= 2)
-                    {
-                        if (blockData != null) blockData.type = SphereType.Water;
-                        renderer.material = waterMaterial;
-                    }
-                    else if (y < 4)
-                    {
-                        if (blockData != null) blockData.type = SphereType.Sand;
-                        renderer.material = sandMaterial;
-                    }
-                    else if (y < 6)
-                    {
-                        if (blockData != null) blockData.type = SphereType.Dirt;
-                        renderer.material = dirtMaterial;
-                    }
-                    else if (y < 8)
-                    {
-                        if (blockData != null) blockData.type = SphereType.Stone;
-                        renderer.material = stoneMaterial;
-                    }
-                    else if (y > 8)
-                    {
-                        if (blockData != null) blockData.type = SphereType.Snow;
-                        renderer.material = snowMaterial;
-                    }
-                    else
-                    {
-                        if (blockData != null) blockData.type = SphereType.Grass;
-                        renderer.material = grassMaterial;
-                    }
+                    if (y <= 2)       { if (blockData != null) blockData.type = SphereType.Water;  renderer.material = waterMaterial; }
+                    else if (y < 4)   { if (blockData != null) blockData.type = SphereType.Sand;   renderer.material = sandMaterial; }
+                    else if (y < 6)   { if (blockData != null) blockData.type = SphereType.Dirt;   renderer.material = dirtMaterial; }
+                    else if (y < 8)   { if (blockData != null) blockData.type = SphereType.Stone;  renderer.material = stoneMaterial; }
+                    else if (y > 8)   { if (blockData != null) blockData.type = SphereType.Snow;   renderer.material = snowMaterial; }
+                    else             { if (blockData != null) blockData.type = SphereType.Grass;  renderer.material = grassMaterial; }
 
                     if (block.GetComponent<Collider>() == null)
                         block.AddComponent<SphereCollider>();
@@ -120,34 +93,25 @@ public class TerrainGenerator : MonoBehaviour
                     block.GetComponent<MeshRenderer>().allowOcclusionWhenDynamic = false;
                     block.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-                    generatedPositions.Add(pos);
-                    spawnedBlocks[pos] = block;
+                    generatedPositions.Add(key);
+                    spawnedBlocks[key] = block;
 
-                    // Flora generation on surface
+                    // Flora generation
                     if (y == yMax)
                     {
-                        float spawnChance = Random.value;
+                        float chance = Random.value;
 
                         if (blockData.type == SphereType.Grass)
                         {
-                            if (spawnChance < 0.05f && treePrefab != null && !spawnedFlora.ContainsKey(pos))
-                            {
-                                GameObject tree = Instantiate(treePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
-                                spawnedFlora[pos] = tree;
-                            }
-                            else if (spawnChance < 0.10f && flowerPrefab != null && !spawnedFlora.ContainsKey(pos))
-                            {
-                                GameObject flower = Instantiate(flowerPrefab, pos + Vector3.up * 0.3f, Quaternion.identity, transform);
-                                spawnedFlora[pos] = flower;
-                            }
+                            if (chance < 0.05f && treePrefab && !spawnedFlora.ContainsKey(key))
+                                spawnedFlora[key] = Instantiate(treePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
+                            else if (chance < 0.10f && flowerPrefab && !spawnedFlora.ContainsKey(key))
+                                spawnedFlora[key] = Instantiate(flowerPrefab, pos + Vector3.up * 0.3f, Quaternion.identity, transform);
                         }
                         else if (blockData.type == SphereType.Sand)
                         {
-                            if (spawnChance < 0.03f && creaturePrefab != null && !spawnedFlora.ContainsKey(pos))
-                            {
-                                GameObject creature = Instantiate(creaturePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
-                                spawnedFlora[pos] = creature;
-                            }
+                            if (chance < 0.03f && creaturePrefab && !spawnedFlora.ContainsKey(key))
+                                spawnedFlora[key] = Instantiate(creaturePrefab, pos + Vector3.up * 0.5f, Quaternion.identity, transform);
                         }
                     }
                 }
@@ -158,43 +122,39 @@ public class TerrainGenerator : MonoBehaviour
     void UnloadDistantTerrain()
     {
         Vector3 playerPos = player.position;
-        List<Vector3> toRemove = new List<Vector3>();
+        List<Vector3> toRemove = new();
 
         foreach (var pair in spawnedBlocks)
         {
-            float distance = Vector3.Distance(pair.Key, playerPos);
-            if (distance > unloadRadius)
+            if (Vector3.Distance(pair.Key, playerPos) > unloadRadius)
             {
                 Destroy(pair.Value);
                 toRemove.Add(pair.Key);
             }
         }
 
-        foreach (var pos in toRemove)
+        foreach (var key in toRemove)
         {
-            spawnedBlocks.Remove(pos);
-            generatedPositions.Remove(pos);
+            spawnedBlocks.Remove(key);
+            generatedPositions.Remove(key);
         }
     }
 
     void UnloadDistantFlora()
     {
         Vector3 playerPos = player.position;
-        List<Vector3> toRemove = new List<Vector3>();
+        List<Vector3> toRemove = new();
 
         foreach (var pair in spawnedFlora)
         {
-            float distance = Vector3.Distance(pair.Key, playerPos);
-            if (distance > unloadRadius)
+            if (Vector3.Distance(pair.Key, playerPos) > unloadRadius)
             {
                 Destroy(pair.Value);
                 toRemove.Add(pair.Key);
             }
         }
 
-        foreach (var pos in toRemove)
-        {
-            spawnedFlora.Remove(pos);
-        }
+        foreach (var key in toRemove)
+            spawnedFlora.Remove(key);
     }
 }
