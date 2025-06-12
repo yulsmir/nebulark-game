@@ -58,7 +58,7 @@ public class TerrainGenerator : MonoBehaviour
     {
         Vector3 playerPos = player.position;
         float avgRadius = (minSphereScale + maxSphereScale) / 2f;
-        float step = avgRadius * 2f * 0.95f; // Tight fit, slight overlap
+        float step = avgRadius * 2f * 0.85f; // Tight fit, slight overlap
 
         for (int x = -chunkRadius; x <= chunkRadius; x++)
         {
