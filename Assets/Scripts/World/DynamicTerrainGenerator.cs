@@ -27,6 +27,11 @@ public class TerrainGenerator : MonoBehaviour
     [Header("Player Reference")]
     public Transform player;
 
+    [Header("Unloading Settings")]
+    public int unloadRadius = 12; // must be > chunkRadius
+
+    private Dictionary<Vector3Int, GameObject> spawnedBlocks = new Dictionary<Vector3Int, GameObject>();
+
     private HashSet<Vector3Int> generatedPositions = new HashSet<Vector3Int>();
 
     void Update()
@@ -34,6 +39,7 @@ public class TerrainGenerator : MonoBehaviour
         if (player == null || spherePrefab == null) return;
 
         GenerateTerrainAroundPlayer();
+        UnloadDistantTerrain();
     }
 
     void GenerateTerrainAroundPlayer()
@@ -101,10 +107,34 @@ public class TerrainGenerator : MonoBehaviour
                     block.isStatic = true;
                     block.GetComponent<MeshRenderer>().allowOcclusionWhenDynamic = false;
                     block.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-
+                    
                     generatedPositions.Add(pos);
+                    spawnedBlocks[pos] = block;
+
                 }
             }
         }
     }
+    void UnloadDistantTerrain()
+    {
+        Vector3 playerPos = player.position;
+        List<Vector3Int> toRemove = new List<Vector3Int>();
+
+        foreach (var pair in spawnedBlocks)
+        {
+            float distance = Vector3.Distance(pair.Key, playerPos);
+            if (distance > unloadRadius)
+            {
+                Destroy(pair.Value); // or pair.Value.SetActive(false);
+                toRemove.Add(pair.Key);
+            }
+        }
+
+        foreach (var pos in toRemove)
+        {
+            spawnedBlocks.Remove(pos);
+            generatedPositions.Remove(pos);
+        }
+    }
+
 }

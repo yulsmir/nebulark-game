@@ -101,41 +101,41 @@
 ---
 🎨 Nebulark Base Color Palette
 🌱 Grass / Leaves
-
     #A8C686 – muted light green
-
     #6D925C – deep, natural green
-
 🪵 Dirt / Trunks
-
     #B58C6B – light brown
-
     #8A5E3C – rich bark tone
-
 ⛰️ Stone
-
     #9C9C9C – warm medium gray
-
     #6A6A6A – deep slate
-
 🌊 Water / Sky
-
     #9DD5E3 – bright sky blue
-
     #70ADC0 – ocean teal
-
     #DCF1FF – soft horizon highlight
-
 🌸 Sand / Accent
-
     #F9C891 – soft orange
-
     #FFE8B5 – pastel cream
-
     #F2B7D5 – warm pink (for petals or butterflies)
-
 ❄️ Snow / Ice
 
     #E9F6FA – light icy blue
-
     #C4DDE6 – cold shadow tone
+
+---
+
+🔧 Next Features
+    🌍 Terrain Unloading
+        Remove or hide spheres far behind the player to save memory.
+    📦 Object Pooling
+        Reuse sphere GameObjects instead of destroying/creating constantly.
+    🧍 Basic Player Interaction
+        Add mining, placing, or harvesting mechanics using raycasts.
+    🌱 Procedural Flora & Creatures
+        Generate stylized trees, flowers, or sphere-creatures in biome regions.
+    🌤 Biome Logic
+        Use temperature, humidity, or noise layers to add desert, snow, etc.
+    🧑‍🤝‍🧑 Multiplayer Setup
+        Sync world generation with players joining/leaving.
+    🪓 Tools & Crafting
+        Combine Rust-style tools with Minecraft-style building.
