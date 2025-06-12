@@ -1,9 +1,12 @@
-public enum SphereType
+namespace World
 {
-    Grass,
-    Dirt,
-    Stone,
-    Water,
-    Sand,
-    Snow
+    public enum SphereType
+    {
+        Grass,
+        Dirt,
+        Stone,
+        Water,
+        Sand,
+        Snow
+    }
 }

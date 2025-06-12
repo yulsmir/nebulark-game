@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using World;
 
 public class TerrainGenerator : MonoBehaviour
 {
