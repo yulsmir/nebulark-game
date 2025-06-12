@@ -178,7 +178,7 @@ MonoBehaviour:
   player: {fileID: 8339639574206188243}
   unloadRadius: 17
   treePrefab: {fileID: 6697389126570787417, guid: 3e51f31e029b75f4987143a445ab44bc, type: 3}
-  flowerPrefab: {fileID: 0}
+  flowerPrefab: {fileID: 6697389126570787417, guid: 6d0f5fee66b15da47a0b535ac62071d6, type: 3}
   creaturePrefab: {fileID: 0}
 --- !u!4 &91057551 stripped
 Transform:
@@ -374,9 +374,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1236311745798205004, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236311745798205004, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
+      propertyPath: m_Radius
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 1236311745798205004, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
+      propertyPath: m_SkinWidth
+      value: 0.9
+      objectReference: {fileID: 0}
     - target: {fileID: 2605046535350775078, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5542535368196561856, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
+      propertyPath: gravity
+      value: -9.29
       objectReference: {fileID: 0}
     - target: {fileID: 5542535368196561856, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
       propertyPath: jumpHeight
