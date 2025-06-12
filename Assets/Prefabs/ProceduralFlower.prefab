@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 098a80f708a3f3949bfa3afe477566c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stemHeight: 3
+  stemHeight: 1
   petalCount: 6
   petalRadius: 0.4
   spherePrefab: {fileID: 6142941686261234867, guid: 12bf651008b589d428bc07086d204345, type: 3}
