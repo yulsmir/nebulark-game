@@ -176,7 +176,7 @@ MonoBehaviour:
   minSphereScale: 1
   maxSphereScale: 1.2
   fillerMinScale: 1
-  fillerMaxScale: 1.5
+  fillerMaxScale: 4
   fillersPerGap: 10
   player: {fileID: 8339639574206188243}
   unloadRadius: 16
@@ -487,6 +487,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3732785208162660594, guid: 58d20a53e54f90a4184732eee91623f8, type: 3}
+      propertyPath: initialSize
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 5389208745337017206, guid: 58d20a53e54f90a4184732eee91623f8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -675,7 +679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 219762872935830658, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.5
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 219762872935830658, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
       propertyPath: m_LocalPosition.z
