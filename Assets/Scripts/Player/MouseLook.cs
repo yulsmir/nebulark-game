@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public Transform playerBody;
+    [Header("References")]
+    public Transform playerBody; // e.g., the "Player" GameObject
     public float mouseSensitivity = 100f;
     public float maxVerticalAngle = 80f;
 
@@ -14,17 +15,19 @@ public class MouseLook : MonoBehaviour
         Cursor.visible = false;
     }
 
-    void LateUpdate()
+    void Update()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        // Vertical rotation (camera)
+        // Clamp vertical camera rotation
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -maxVerticalAngle, maxVerticalAngle);
+
+        // Only rotate camera (pitch) on X axis
         transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
 
-        // Horizontal rotation (player body)
+        // Rotate player body (yaw) on Y axis
         playerBody.Rotate(Vector3.up * mouseX);
     }
 }

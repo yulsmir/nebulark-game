@@ -54,79 +54,92 @@ public class TerrainGenerator : MonoBehaviour
         UnloadDistantFlora();
     }
 
-    void GenerateTerrainAroundPlayer()
+   void GenerateTerrainAroundPlayer()
+{
+    Vector3 playerPos = player.position;
+
+    for (int x = -chunkRadius; x <= chunkRadius; x++)
     {
-        Vector3 playerPos = player.position;
-        float avgRadius = (minSphereScale + maxSphereScale) / 2f;
-        float step = avgRadius * 2f * 0.85f; // Tight fit, slight overlap
-
-        for (int x = -chunkRadius; x <= chunkRadius; x++)
+        for (int z = -chunkRadius; z <= chunkRadius; z++)
         {
-            for (int z = -chunkRadius; z <= chunkRadius; z++)
+            float noiseX = (playerPos.x + x) * scale;
+            float noiseZ = (playerPos.z + z) * scale;
+
+            float surfaceHeight = Mathf.PerlinNoise(noiseX, noiseZ) * heightMultiplier;
+            int ySteps = Mathf.CeilToInt(surfaceHeight);
+
+            float baseX = Mathf.Floor(playerPos.x / 1f) + x;
+            float baseZ = Mathf.Floor(playerPos.z / 1f) + z;
+
+            float cumulativeHeight = 0f;
+
+            for (int y = 0; y <= ySteps; y++)
             {
-                int worldX = Mathf.FloorToInt(playerPos.x / step) + x;
-                int worldZ = Mathf.FloorToInt(playerPos.z / step) + z;
+                float radiusNoise = Mathf.PerlinNoise((baseX + 100) * 0.15f, (baseZ + 100) * 0.15f);
+                float radius = Mathf.Lerp(minSphereScale, maxSphereScale, radiusNoise);
+                float diameter = radius * 2f;
 
-                float yNoise = Mathf.PerlinNoise(worldX * scale, worldZ * scale) * heightMultiplier;
-                int yMax = Mathf.Max(1, Mathf.FloorToInt(yNoise));
+                float averageDiameter = (minSphereScale + maxSphereScale); // 0.8 + 1.2 = 2
+                Vector3 pos = new Vector3(baseX * averageDiameter * 0.95f, cumulativeHeight, baseZ * averageDiameter * 0.95f);
 
-                for (int y = 0; y <= yMax; y++)
+                Vector3 key = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z));
+
+                if (generatedPositions.Contains(key)) continue;
+
+                GameObject block = terrainPool.Get(pos, Quaternion.identity, transform);
+                block.transform.localScale = Vector3.one * diameter;
+
+                Renderer renderer = block.GetComponent<Renderer>();
+                SphereBlock blockData = block.GetComponent<SphereBlock>();
+                if (blockData != null)
                 {
-                    float scaleNoise = Mathf.PerlinNoise((worldX + 100) * 0.2f, (worldZ + 100) * 0.2f);
-                    float radius = Mathf.Lerp(minSphereScale, maxSphereScale, scaleNoise);
-                    float diameter = radius * 2f;
-
-                    Vector3 pos = new Vector3(worldX * step, y * step, worldZ * step);
-                    Vector3 key = new Vector3(Mathf.Round(pos.x), Mathf.Round(pos.y), Mathf.Round(pos.z));
-
-                    if (generatedPositions.Contains(key)) continue;
-
-                    GameObject block = terrainPool.Get(pos, Quaternion.identity, transform);
-                    block.transform.position = pos;
-                    block.transform.localScale = Vector3.one * diameter;
-
-                    Renderer renderer = block.GetComponent<Renderer>();
-                    SphereBlock blockData = block.GetComponent<SphereBlock>();
-                    if (blockData != null) blockData.gridPosition = Vector3Int.RoundToInt(key);
-
-                    if (y <= 2)       { if (blockData != null) blockData.type = SphereType.Water;  renderer.material = waterMaterial; }
-                    else if (y < 4)   { if (blockData != null) blockData.type = SphereType.Sand;   renderer.material = sandMaterial; }
-                    else if (y < 6)   { if (blockData != null) blockData.type = SphereType.Dirt;   renderer.material = dirtMaterial; }
-                    else if (y < 8)   { if (blockData != null) blockData.type = SphereType.Stone;  renderer.material = stoneMaterial; }
-                    else if (y > 8)   { if (blockData != null) blockData.type = SphereType.Snow;   renderer.material = snowMaterial; }
-                    else             { if (blockData != null) blockData.type = SphereType.Grass;  renderer.material = grassMaterial; }
-
-                    if (block.GetComponent<Collider>() == null)
-                        block.AddComponent<SphereCollider>();
-
-                    block.isStatic = true;
-                    block.GetComponent<MeshRenderer>().allowOcclusionWhenDynamic = false;
-                    block.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-
-                    generatedPositions.Add(key);
-                    spawnedBlocks[key] = block;
-
-                    // Flora generation
-                    if (y == yMax)
-                    {
-                        float chance = Random.value;
-
-                        if (blockData.type == SphereType.Grass && !spawnedFlora.ContainsKey(key))
-                        {
-                            if (chance < 0.05f && treePool)
-                                spawnedFlora[key] = treePool.Get(pos + Vector3.up * 0.5f, Quaternion.identity, transform);
-                            else if (chance < 0.10f && flowerPool)
-                                spawnedFlora[key] = flowerPool.Get(pos + Vector3.up * 0.3f, Quaternion.identity, transform);
-                        }
-                        else if (blockData.type == SphereType.Sand && chance < 0.03f && creaturePool && !spawnedFlora.ContainsKey(key))
-                        {
-                            spawnedFlora[key] = creaturePool.Get(pos + Vector3.up * 0.5f, Quaternion.identity, transform);
-                        }
-                    }
+                    blockData.gridPosition = Vector3Int.RoundToInt(key);
+                    blockData.type = GetBlockTypeFromHeight(y);
                 }
+
+                renderer.material = GetMaterialForType(blockData?.type ?? SphereType.Dirt);
+
+                if (block.GetComponent<Collider>() == null)
+                    block.AddComponent<SphereCollider>();
+
+                block.isStatic = true;
+                block.GetComponent<MeshRenderer>().allowOcclusionWhenDynamic = false;
+                block.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+                generatedPositions.Add(key);
+                spawnedBlocks[key] = block;
+
+                // Stack next sphere above the current one
+                cumulativeHeight += diameter * 0.95f; // small overlap to prevent floating
             }
         }
     }
+}
+
+SphereType GetBlockTypeFromHeight(int y)
+{
+    if (y <= 2) return SphereType.Water;
+    if (y < 4) return SphereType.Sand;
+    if (y < 6) return SphereType.Dirt;
+    if (y < 8) return SphereType.Stone;
+    if (y > 8) return SphereType.Snow;
+    return SphereType.Grass;
+}
+
+Material GetMaterialForType(SphereType type)
+{
+    return type switch
+    {
+        SphereType.Water => waterMaterial,
+        SphereType.Sand => sandMaterial,
+        SphereType.Dirt => dirtMaterial,
+        SphereType.Stone => stoneMaterial,
+        SphereType.Snow => snowMaterial,
+        SphereType.Grass => grassMaterial,
+        _ => dirtMaterial,
+    };
+}
+
 
     void UnloadDistantTerrain()
     {
@@ -158,8 +171,8 @@ public class TerrainGenerator : MonoBehaviour
         {
             if (Vector3.Distance(pair.Key, playerPos) > unloadRadius)
             {
-                if (pair.Value.name.Contains("Tree"))         treePool?.Return(pair.Value);
-                else if (pair.Value.name.Contains("Flower"))  flowerPool?.Return(pair.Value);
+                if (pair.Value.name.Contains("Tree"))      treePool?.Return(pair.Value);
+                else if (pair.Value.name.Contains("Flower")) flowerPool?.Return(pair.Value);
                 else if (pair.Value.name.Contains("Creature")) creaturePool?.Return(pair.Value);
                 else Destroy(pair.Value);
 
