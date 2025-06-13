@@ -125,17 +125,24 @@
 ---
 
 🔧 Next Features
-    🌍 Terrain Unloading
-        Remove or hide spheres far behind the player to save memory.
-    📦 Object Pooling
-        Reuse sphere GameObjects instead of destroying/creating constantly.
-    🧍 Basic Player Interaction
-        Add mining, placing, or harvesting mechanics using raycasts.
-    🌱 Procedural Flora & Creatures
-        Generate stylized trees, flowers, or sphere-creatures in biome regions.
-    🌤 Biome Logic
-        Use temperature, humidity, or noise layers to add desert, snow, etc.
-    🧑‍🤝‍🧑 Multiplayer Setup
-        Sync world generation with players joining/leaving.
-    🪓 Tools & Crafting
-        Combine Rust-style tools with Minecraft-style building.
+
+🌍 Terrain Unloading
+- [X] Remove or hide spheres far behind the player to save memory.
+📦 Object Pooling
+- [X] Reuse sphere GameObjects instead of destroying/creating constantly.
+🧍 Basic Player Interaction
+- [X] Add mining, placing, or harvesting mechanics using raycasts.
+🌱 Procedural Flora & Creatures
+- [X] Generate stylized trees, flowers, or sphere-creatures in biome regions.
+🌤 Biome Logic
+- [] Use temperature, humidity, or noise layers to add desert, snow, etc.
+🧑‍🤝‍🧑 Multiplayer Setup
+- [] Sync world generation with players joining/leaving.
+🪓 Tools & Crafting
+- []  Combine Rust-style tools with Minecraft-style building.
+🌱 Add biome-specific flora (e.g., cactus in sand, pine trees on snow).
+⚙️ GPU instancing support for large-scale performance boost.
+🗂️ Async chunk generation so Unity doesn't hiccup.
+🌍 Terrain blending (e.g., transition zones between biomes).
+🧠 Basic AI for creatures to roam or idle.
+💾 Saving/loading generated chunks to disk or memory.

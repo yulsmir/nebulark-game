@@ -119,6 +119,68 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &12023349
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2785551043220015950, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 6142941686261234867, guid: 12bf651008b589d428bc07086d204345, type: 3}
+    - target: {fileID: 3428880284433322662, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_Name
+      value: FillerPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7279811416096807336, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3602868287951452453, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
 --- !u!1 &51879426
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,9 +225,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040ca9809255d224aa7984f4710d8f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scale: 0.1
+  scale: 0.05
   heightMultiplier: 12
-  chunkRadius: 19
+  chunkRadius: 15
   spherePrefab: {fileID: 6142941686261234867, guid: 12bf651008b589d428bc07086d204345, type: 3}
   grassMaterial: {fileID: 2100000, guid: bb0296752a0d0b745b3baa31a05c1c98, type: 2}
   dirtMaterial: {fileID: 2100000, guid: 5e30a487048262a40b1071c94f2fcbea, type: 2}
@@ -173,17 +235,18 @@ MonoBehaviour:
   waterMaterial: {fileID: 2100000, guid: 74e437afe2ad595479c340e354a185d0, type: 2}
   sandMaterial: {fileID: 2100000, guid: 99c47975038d16a4abffb687e06fe418, type: 2}
   snowMaterial: {fileID: 2100000, guid: 35f4782e95356bb419e75050d2d88160, type: 2}
-  minSphereScale: 0.8
+  minSphereScale: 1
   maxSphereScale: 1.2
+  fillerMinScale: 1
+  fillerMaxScale: 1.5
+  fillersPerGap: 10
   player: {fileID: 8339639574206188243}
-  unloadRadius: 20
-  treePrefab: {fileID: 6697389126570787417, guid: 3e51f31e029b75f4987143a445ab44bc, type: 3}
-  flowerPrefab: {fileID: 6697389126570787417, guid: 6d0f5fee66b15da47a0b535ac62071d6, type: 3}
-  creaturePrefab: {fileID: 0}
+  unloadRadius: 16
   terrainPool: {fileID: 1888862292}
   treePool: {fileID: 1720855672}
   flowerPool: {fileID: 1252340520}
   creaturePool: {fileID: 0}
+  fillerPool: {fileID: 705482109}
 --- !u!4 &91057551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 219762872935830658, guid: ef5e0a1f3ca499649adabbb25141f59b, type: 3}
@@ -330,6 +393,17 @@ MonoBehaviour:
   playerBody: {fileID: 91057551}
   mouseSensitivity: 20
   maxVerticalAngle: 20
+--- !u!114 &705482109 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2785551043220015950, guid: c79711e10624eeb4a9ac6e8116abbb20, type: 3}
+  m_PrefabInstance: {fileID: 12023349}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d729a6a9f7f71bc4e9ed9f268a76b82c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1252340520 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3091035979582217177, guid: b54146fcc3fa774438f2ce9a3d745c8c, type: 3}
@@ -692,3 +766,4 @@ SceneRoots:
   - {fileID: 3958409825489916736}
   - {fileID: 2010396798016110348}
   - {fileID: 380658339111621227}
+  - {fileID: 12023349}
